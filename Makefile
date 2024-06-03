@@ -31,6 +31,9 @@ composer-install:
 composer-update:
 	$(BUILD-PHP) "php ./composer.phar update $(MODULE)"
 
+composer-require:
+	$(BUILD-PHP) "php ./composer.phar require $(MODULE)"
+
 cache-clear:
 	$(BUILD-PHP) "php $(SYMFONY_CONSOLE) cache:clear"
 
@@ -46,8 +49,14 @@ logs:
 generate:
 	docker exec -it symfony_php symfony console $(COMMAND)
 
+entity:
+	docker exec -it symfony_php symfony console make:entity
+
 create:
 	$(BUILD-PHP) "php ./composer.phar create-project symfony/skeleton:"7.0.*" my_project"
 
 doctrine:
-	docker exec -it symfony_php symfony console doctrine:database:create
+	docker exec -it symfony_php symfony console doctrine:migrations:migrate
+
+fixtures:
+	docker exec -it symfony_php symfony console doctrine:fixtures:load
